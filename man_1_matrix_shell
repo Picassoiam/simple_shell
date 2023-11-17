@@ -1,0 +1,60 @@
+
+.TH matrix_shell 1 "November 17, 2023" 1.0 "matrix shell Manual"
+
+.SH NAME
+matrix_shell
+
+A simple command interpreter
+.SH SYNOPSIS
+command [-o option_name] [command_file [argument ...]]
+
+.SH DESCRIPTION
+matrix_shell
+is a basic command line interpreter based on the first Unix shell 'sh', created by Ken Thompson in 1971. matrix_shell is intentionally minimalistic and contains functionality for only the most essential shell tasks: accepting input, parsing the input into a command and its arguments, and executing that input. Error checking is straightforward and follows Bash conventions.
+
+.SH INVOCATION
+
+When no arguments are provided and the shell's standard input is connected to a terminal, the shell operates in interactive mode. An interactive shell typically prompts before each command and handles programming and command errors differently. Upon startup, the shell examines argument 0.
+
+If command-line arguments are specified in addition to the options, the shell interprets the first argument as the name of a file containing commands (a shell script), and the remaining arguments are set as the positional parameters of the shell ($1, $2, etc.). Otherwise, the shell reads commands from its standard input.
+
+.SH BUILTINS
+.B env
+.RS 6
+Lists all environment variables
+.RE
+
+.B exit
+[\fIEXIT_STATUS\fR]
+.RS 6
+Exits the shell with an optional integer exit status
+.RE
+
+.SH NOTES
+Currently, the program does not support the following commands:
+
+.B alias, bg, cd, eval, fg, hash, help, jobs, type
+...among others
+
+Control-C has been disabled
+
+.SH KNOWN BUGS
+If you encounter a bug in matrix shell, you should report it. However, first confirm that it is indeed a bug and that it occurs in the latest version of matrix shell.
+
+ALL bug reports should include:
+
+The version number of matrix shell
+The hardware and operating system
+The compiler used to compile
+A description of the bug's behavior
+A short script or `recipe' that reproduces the bug
+
+.SH AUTHORS
+Picassoiam
+<\fIhttps://github.com/Picassoiam\fR>
+
+vvr0n
+<\fIhttps://github.com/vvr0n\fR>
+
+.SH SEE ALSO
+.B sh
