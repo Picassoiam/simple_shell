@@ -80,4 +80,3 @@ char **parse_input(char *usr_input, char **path_array, char *NAME)
 	commands[i] = NULL;
 	return (commands);
 }
-

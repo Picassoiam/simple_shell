@@ -66,4 +66,3 @@ int main(__attribute__((unused)) int argc, char **argv, char **env)
 	}
 	return (0);
 }
-

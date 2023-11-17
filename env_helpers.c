@@ -1,86 +1,145 @@
 #include "shell.h"
 
 /**
- * _strlen - returns the length of a null-terminated string
- * @str: string
+ * getpath_cnt - counts number of directories in PATH
+ * @path: PATH string
  *
- * Return: length of string, minus null terminator
+ * Return: number of directories
  */
 
-int _strlen(char *str)
+int getpath_cnt(char *path)
 {
-	int len = 0;
+	int i, count;
 
-	while (str[len] != '\0')
-		len++;
-
-	return (len);
-}
-
-
-/**
- * _strcmp - compares two strings
- * @s1: first string
- * @s2: second string
- *
- * Return: difference of two strings (first minus second) or 0 if equal
- */
-
-int _strcmp(char *s1, char *s2)
-{
-	int index;
-
-	for (index = 0; s1[index] != '\0' && s2[index] != '\0'; index++)
+	i = 0;
+	count = 0;
+	while (path[i] != '\0')
 	{
-		if (s1[index] < s2[index])
-			return (s1[index] - s2[index]);
-
-		else if (s1[index] > s2[index])
-			return (s1[index] - s2[index]);
+		if (path[i] == '=' || path[i] == ':')
+			count++;
+		i++;
 	}
 
-	return (0);
+	return (count);
 }
 
-
 /**
- * _strdup - returns a pointer to a newly allocated space in memory
- * @str: string
- * Return: pointer to newly allocated space in memory
+ * getpath_array - creates an array of PATH directories
+ * @env: user environment
+ *
+ * Return: array of strings
  */
 
-char *_strdup(char *str)
+char **getpath_array(char **env)
 {
-	int length, i;
-	char *arr;
+	unsigned int i, j, path_count;
+	int compare = 0;
+	char *token, *token2,  *mypath;
+	char **path_array;
 
-	length = 0;
-	if (str == NULL)
-		return (NULL);
-
-	length = _strlen(str);
-
-	arr = malloc((length + 1) * sizeof(char));
-	if (arr == NULL)
-		return (NULL);
-
-	for (i = 0; i < length; i++)
-		arr[i] = str[i];
-
-	arr[i] = '\0';
-
-	return (arr);
+	i = 0;
+	j = 0;
+	while (env[i] != NULL)
+	{
+		compare = _strcmp(env[i], "PATH");
+		if (compare == 0)
+		{
+			mypath = _strdup(env[i]);
+			path_count = getpath_cnt(mypath);
+			token = strtok(mypath, "=");
+			token = strtok(NULL, "=");
+			path_array = malloc(sizeof(char *) * (path_count + 1));
+			if (path_array == NULL)
+				return (NULL);
+			if (token[0] == ':')
+			{
+				path_array[j] = _strdup("./");
+				j++;
+				token2 = strtok(token, ":");
+				token2 = strtok(NULL, ":");
+			}
+			else
+				token2 = strtok(token, ":");
+			while (j < path_count)
+			{
+				path_array[j] = _strdup(token2);
+				j++;
+				token2 = strtok(NULL, ":");
+			}
+		}
+		i++;
+	}
+	path_array[path_count] = NULL;
+	free(mypath);
+	return (path_array);
 }
 
 /**
-* _putchar - prints a single character to stdout
-* @c: The character to print
-*
-* Return: 1 if successful, -1 otherwise
-*/
+ * _findpath - find the PATH of a command
+ * @path_array: array of directories in PATH
+ * @command: command to find path for
+ *
+ * Return: path of command, NULL if it fails
+ */
 
-int _putchar(char c)
+char *_findpath(char **path_array, char *command)
 {
-	return (write(STDOUT_FILENO, &c, 1));
+	int i, j, ok_f = 0, ok_x = 0, dir_len, com_len, total_len;
+	char *path;
+
+	for (i = 0; path_array[i] != NULL; i++)
+	{
+		dir_len = _strlen(path_array[i]);
+		com_len = _strlen(command);
+		total_len = dir_len + com_len;
+		path = malloc(sizeof(char) * (total_len + 2));
+		if (path == NULL)
+		{
+			free_array(path_array);
+			return (NULL);
+		}
+		j = 0;
+		while (j < dir_len)
+		{
+			path[j] = path_array[i][j];
+			j++;
+		}
+		path[j] = '/';
+		j = 0;
+		while (j < com_len)
+		{
+			path[dir_len + j + 1] = command[j];
+			j++;
+		}
+		path[total_len + 1] = '\0';
+		ok_f = access(path, F_OK);
+		ok_x = access(path, X_OK);
+		if (ok_f == 0)
+		{
+			if (ok_x == 0)
+				return (path);
+			free(path);
+			return ("no_access");
+		}
+		free(path);
+	}
+	return (NULL);
 }
 
+/**
+ * print_envi - print environment variables
+ * @env: array of environment variables
+ */
+
+void print_envi(char **env)
+{
+	int i;
+
+	i = 0;
+	while (env[i] != NULL)
+	{
+		write(STDOUT_FILENO, env[i], _strlen(env[i]));
+		write(STDOUT_FILENO, "\n", 1);
+		i++;
+	}
+}

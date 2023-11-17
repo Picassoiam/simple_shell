@@ -13,4 +13,3 @@ void disp_splash_scrn(FILE *file_ptr)
 	while(fgets(read_string,sizeof(read_string),file_ptr) != NULL)
 		printf("%s",read_string);
 }
-

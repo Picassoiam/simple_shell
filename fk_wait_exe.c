@@ -51,4 +51,3 @@ void forkwait_exec(char **commands, char **path_array, char **env,
 	exitcode = 0;
 	wait(&status);
 }
-

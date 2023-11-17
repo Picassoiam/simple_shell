@@ -105,4 +105,3 @@ int env_chk(char *usr_input)
 	}
 	return (1);
 }
-

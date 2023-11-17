@@ -55,4 +55,3 @@ void print_envi(char **env);
 void disp_splash_scrn(FILE *file_ptr);
 
 #endif
-

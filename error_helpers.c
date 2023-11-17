@@ -68,4 +68,3 @@ void exit_err(char *NAME, char *usr_input)
 	write(STDERR_FILENO, token, _strlen(token));
 	write(STDERR_FILENO, "\n", 1);
 }
-
