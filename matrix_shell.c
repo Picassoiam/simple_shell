@@ -26,7 +26,7 @@ int main(__attribute__((unused)) int argc, char **argv, char **env)
 
 	signal(SIGINT, SIG_IGN);
 
-	// display splash screen
+	/*display splash screen*/
 	if((fptr = fopen(filename,"r")) == NULL)
 	{
 		fprintf(stderr,"error opening %s\n",filename);
